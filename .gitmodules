@@ -1,6 +1,3 @@
-[submodule "Toolsfactory.Protocols.Homie"]
-	path = libs/Toolsfactory.Protocols.Homie
-	url = https://github.com/toolsfactory/Toolsfactory.Protocols.Homie.git
 [submodule "libs/Toolsfactory.Protocols.Homie"]
 	path = libs/Toolsfactory.Protocols.Homie
 	url = https://github.com/toolsfactory/Toolsfactory.Protocols.Homie.git
