@@ -15,6 +15,7 @@ using Tiveria.Home.Knx.Datapoint;
 using Tiveria.Home.Knx.IP;
 using Tiveria.Home.Knx.IP.Structures;
 using Tiveria.Home.Knx.ObjectServer;
+using Toolsfactory.Protocols.Homie.Devices;
 
 namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
 {
@@ -26,26 +27,31 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
         #region private fields
         private readonly ILogger<HeatingService> _logger;
         private readonly HttpClient _httpClient;
+        private readonly ILoggerFactory _loggerFactory;
         private readonly IOptions<HeatingOptions> _options;
+        private readonly HomieEnvironmentBuilder _homieEnv;
         #endregion
 
         #region constructor
-        public HeatingService(ILoggerFactory loggerfactory, IHttpClientFactory httpClientFactory, IOptions<HeatingOptions> options)
+        public HeatingService(ILoggerFactory loggerfactory, IHttpClientFactory httpClientFactory, IOptions<HeatingOptions> options, IOptions<HomieMqttServerConfiguration> mqttConfig)
         {
             Ensure.That(loggerfactory).IsNotNull();
             Ensure.That(options).IsNotNull();
             Ensure.That(options.Value).IsNotNull();
-
+            _loggerFactory = loggerfactory;
             _options = options;
             _logger = loggerfactory.CreateLogger<HeatingService>();
-            _httpClient = httpClientFactory.CreateClient("HeatingService");
+            _homieEnv = new HomieEnvironmentBuilder(_options.Value.HomieDeviceIdentifier, _options.Value.HomieDeviceName, _options.Value.HomieDeviceNodes, mqttConfig.Value, _loggerFactory);
+            KnxNetIPServiceSerializerFactory.Instance.Register<ObjectServerProtocolServiceSerializer>();
         }
         #endregion
+
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Service ready to start with delay: {startupdelay} sec", _options.Value.StartupDelaySeconds);
 
             await Task.Delay(millisecondsDelay: _options.Value.StartupDelaySeconds * 1000, cancellationToken: cancellationToken).ConfigureAwait(false);
+
 
             await base.StartAsync(cancellationToken);
         }
@@ -59,8 +65,15 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            SortedDictionary<int, int> dpsreceived = new();
             _logger.LogInformation("Service started.");
-            cancellationToken.Register(() => _logger.LogInformation("Service stop request received."));
+            cancellationToken.Register(() =>
+            {
+                _logger.LogInformation("Service stop request received.");
+                foreach (var item in dpsreceived)
+                    Console.WriteLine(item.Key);
+            });
+            await _homieEnv.StartAsync();
             TcpListener server = new TcpListener(new IPEndPoint(IPAddress.Any, _options.Value.LocalServer.Port));
 
             server.Start();
@@ -76,32 +89,40 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
                 var input = new byte[1024];
                 var buffer = new byte[0];
                 // Loop to receive all the data sent by the client.
-                while ((inputlen = await stream.ReadAsync(input, 0, input.Length, cancellationToken)) != 0)
+                while ((inputlen = await stream.ReadAsync(input, 0, input.Length, cancellationToken)) != 0 && !cancellationToken.IsCancellationRequested)
                 {
                     buffer = buffer.Merge(input, inputlen);
 
+                    /*
+                    Console.WriteLine(Environment.NewLine + "-------------------");
+                    Console.WriteLine(DateTime.Now.ToLongTimeString());
+                    Console.WriteLine($"New Bytes: {inputlen}");
+                    Console.WriteLine($"Total Bytes: {buffer.Length}");
+                    Console.WriteLine("Buffer: {0}", buffer.ToHex());
+                    */
+
                     while (TryParseData(out var req, out var size, buffer))
                     {
+
                         var header = new ConnectionHeader();
                         var frame = new KnxNetIPFrame(new ObjectServerProtocolService(header, new SetDatapointValueResService(req.StartDataPoint, 0)));
                         var answer = frame.ToBytes();
                         stream.Write(answer);
                         foreach (var item in req.DataPoints)
                         {
-                            if (Datapoints.TryGetValue(item.ID, out var dp))
+                            //Console.WriteLine($"{item.ID}: {item.Value.ToHex()}");
+                            if (!dpsreceived.ContainsKey(item.ID))
+                                dpsreceived.Add(item.ID, 0);
+
+                            if (_homieEnv.MappedProperties.TryGetValue(item.ID, out var propEntry))
                             {
-                                var dpttype = DatapointTypesList.GetTypeById(dp.dptid);
-                                if (dpttype != null)
+                                if(DPT2HomieDataConverter.TryTranslateDptToHomie(item.Value, propEntry.DptId, out var value, out var homietype))
                                 {
-                                    var value = dpttype.DecodeString(item.Value, withUnit: false, invariant: true);
-                                    var key = dp.device + "_" + dp.dptname;
-                                    await PutUpdateAsync(key, value);
-                                    //                                    _logger.LogDebug("Sent {value} to {key}", value, key);
+                                    propEntry.Property.RawValue = value;
                                 }
                             }
                         }
                         buffer = buffer.Clone(size);
-                        //await PutUpdateAsync(_options.Value.OHServer.ItemLastUpdate, DateTime.Now.ToString("s", CultureInfo.InvariantCulture.DateTimeFormat));
                     }
                 }
 
@@ -110,30 +131,9 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
                 _logger.LogDebug("Connection closed");
             }
             server.Stop();
+            await _homieEnv.StopAsync();
             _logger.LogDebug("Server stopped");
         }
-
-        async Task PutUpdateAsync(string key, string value)
-        {
-            try
-            {
-                var ep = GenerateUriForItem(key);
-                var result = await _httpClient.PutAsync(ep, new StringContent(value));
-                _logger.UpdateSent(ep, value);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error sending update");
-            }
-        }
-
-        #region internal helper to generate item uri
-        private Uri GenerateUriForItem(string item)
-        {
-            //var path = String.Format(CultureInfo.InvariantCulture, _options.Value.OHServer.Basepath, item);
-            return new Uri(item);
-        }
-        #endregion
 
         private static bool TryParseData(out SetDatapointValueReqService? result, out int size, Span<byte> data)
         {
@@ -152,6 +152,8 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
             return false;
         }
     }
+
+
 
     #region logging helper class for high performance logging (using static methods as in Microsoft core libs)
     internal static class Log

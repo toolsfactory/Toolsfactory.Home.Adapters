@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Tiveria.Home.Abfallkalender.Service": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "environment": "Development"
+      }
+    }
+  }
+}

@@ -4,8 +4,8 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
 {
     public static class DPT2HomieDataConverter
     {
-        private static Dictionary<string, string> _mappings = new Dictionary<string, string>
-            () { { "", "" },
+        private static Dictionary<string, string> _mappings = new Dictionary<string, string> () 
+        {
             {"1.001", "boolean" }, // (on/off)
             {"1.002", "boolean" }, // (true/false)
             {"1.003", "boolean" }, // (enable/disable)
@@ -26,7 +26,12 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
             //{"10.001", "TimeOfDay" }
         };
 
-        public static bool TryTranslateDptToHomie(byte[] data, string dptid, out string value, out string homietype)
+        public static bool TryGetHomiePropertyTypeFromDptId(string dptid, out string? homietype)
+        {
+            return _mappings.TryGetValue(dptid, out homietype);
+        }
+
+        public static bool TryTranslateDptToHomie(byte[] data, string dptid, out string value, out string? homietype)
         {
             value = "";
             if (!_mappings.TryGetValue(dptid, out homietype))

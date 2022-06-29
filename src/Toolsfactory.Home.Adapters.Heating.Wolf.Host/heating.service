@@ -1,0 +1,17 @@
+[Unit]
+Description=Heating proxy for OpenHab
+After=network.target
+
+[Service]
+ExecStart=/usr/share/ohheating/heating.host
+Restart=always
+User=pi
+# Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
+Group=nogroup
+WorkingDirectory=/usr/share/ohheating
+Environment=PATH=/usr/bin:/usr/local/bin:/usr/share/dotnet:/opt/dotnet/shared:/opt/dotnet
+Environment=HEATING_CONF=/etc/ohadapters/heating
+Environment=DOTNET_ROOT=/opt/dotnet
+
+[Install]
+WantedBy=multi-user.target

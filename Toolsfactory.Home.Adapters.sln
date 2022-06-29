@@ -1,0 +1,104 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.Heating.Wolf.Host", "src\Toolsfactory.Home.Adapters.Heating.Wolf.Host\Toolsfactory.Home.Adapters.Heating.Wolf.Host.csproj", "{26B03F9B-7A57-40D4-BFDC-FAE2446DA4A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.Heating.Wolf.Service", "src\Toolsfactory.Home.Adapters.Heating.Wolf.Service\Toolsfactory.Home.Adapters.Heating.Wolf.Service.csproj", "{12B5A906-DD4F-4456-A61E-82C9A87ECD8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D133FA32-7A8A-4EA0-9681-BD39A6D30B38}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.gitmodules = .gitmodules
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{D5054E01-00B5-4A27-B43F-FFE062E1D49A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Protocols.Homie", "libs\Toolsfactory.Protocols.Homie\src\Toolsfactory.Protocols.Homie\Toolsfactory.Protocols.Homie.csproj", "{1146B811-2B10-43B8-B009-057CD70DBB58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.Heating.Wolf.JsonBuilder", "src\Toolsfactory.Home.Adapters.Heating.Wolf.JsonBuilder\Toolsfactory.Home.Adapters.Heating.Wolf.JsonBuilder.csproj", "{F3111533-A484-43D3-B4FD-947A720AEE9E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.Heating.Wolf.Tests", "src\Toolsfactory.Home.Adapters.Heating.Wolf.Tests\Toolsfactory.Home.Adapters.Heating.Wolf.Tests.csproj", "{4A515CEE-87FD-42AE-892B-4DF0BA37512C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F2EDD50C-CD3C-4623-813D-D4D23F1C7A9C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Heating", "Heating", "{A8746B6B-6449-436A-9F16-D24566904925}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolsfactory.Home.Adapters.Common", "src\Toolsfactory.Home.Adapters.Common\Toolsfactory.Home.Adapters.Common.csproj", "{27A42768-3ECB-4A07-A2B3-A9354808A464}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Garbage", "Garbage", "{255F7431-9378-4DE8-A428-07BDF8D7C7D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MultiHost", "MultiHost", "{DB540865-6B40-4D04-ABCE-82A42495B6E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.Garbage.Awido.Service", "src\Toolsfactory.Home.Adapters.Garbage.Awido.Service\Toolsfactory.Home.Adapters.Garbage.Awido.Service.csproj", "{90D72B37-D6FC-479A-91D3-534BBCB3D4FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.Garbage.Awido.Host", "src\Toolsfactory.Home.Adapters.Garbage.Awido.Host\Toolsfactory.Home.Adapters.Garbage.Awido.Host.csproj", "{6860EC81-27BF-4DDE-95C9-84E862AB8907}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ical.Net", "libs\ical.net\net-core\Ical.Net\Ical.Net.csproj", "{C25A3BD1-1519-4C7C-AD2F-081B1DB0D2AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{26B03F9B-7A57-40D4-BFDC-FAE2446DA4A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B03F9B-7A57-40D4-BFDC-FAE2446DA4A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26B03F9B-7A57-40D4-BFDC-FAE2446DA4A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26B03F9B-7A57-40D4-BFDC-FAE2446DA4A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12B5A906-DD4F-4456-A61E-82C9A87ECD8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12B5A906-DD4F-4456-A61E-82C9A87ECD8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12B5A906-DD4F-4456-A61E-82C9A87ECD8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12B5A906-DD4F-4456-A61E-82C9A87ECD8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1146B811-2B10-43B8-B009-057CD70DBB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1146B811-2B10-43B8-B009-057CD70DBB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1146B811-2B10-43B8-B009-057CD70DBB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1146B811-2B10-43B8-B009-057CD70DBB58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3111533-A484-43D3-B4FD-947A720AEE9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3111533-A484-43D3-B4FD-947A720AEE9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3111533-A484-43D3-B4FD-947A720AEE9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3111533-A484-43D3-B4FD-947A720AEE9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A515CEE-87FD-42AE-892B-4DF0BA37512C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A515CEE-87FD-42AE-892B-4DF0BA37512C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A515CEE-87FD-42AE-892B-4DF0BA37512C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A515CEE-87FD-42AE-892B-4DF0BA37512C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27A42768-3ECB-4A07-A2B3-A9354808A464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27A42768-3ECB-4A07-A2B3-A9354808A464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27A42768-3ECB-4A07-A2B3-A9354808A464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27A42768-3ECB-4A07-A2B3-A9354808A464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90D72B37-D6FC-479A-91D3-534BBCB3D4FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90D72B37-D6FC-479A-91D3-534BBCB3D4FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90D72B37-D6FC-479A-91D3-534BBCB3D4FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90D72B37-D6FC-479A-91D3-534BBCB3D4FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6860EC81-27BF-4DDE-95C9-84E862AB8907}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6860EC81-27BF-4DDE-95C9-84E862AB8907}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6860EC81-27BF-4DDE-95C9-84E862AB8907}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6860EC81-27BF-4DDE-95C9-84E862AB8907}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C25A3BD1-1519-4C7C-AD2F-081B1DB0D2AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C25A3BD1-1519-4C7C-AD2F-081B1DB0D2AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C25A3BD1-1519-4C7C-AD2F-081B1DB0D2AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C25A3BD1-1519-4C7C-AD2F-081B1DB0D2AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{26B03F9B-7A57-40D4-BFDC-FAE2446DA4A3} = {A8746B6B-6449-436A-9F16-D24566904925}
+		{12B5A906-DD4F-4456-A61E-82C9A87ECD8A} = {A8746B6B-6449-436A-9F16-D24566904925}
+		{1146B811-2B10-43B8-B009-057CD70DBB58} = {D5054E01-00B5-4A27-B43F-FFE062E1D49A}
+		{F3111533-A484-43D3-B4FD-947A720AEE9E} = {A8746B6B-6449-436A-9F16-D24566904925}
+		{4A515CEE-87FD-42AE-892B-4DF0BA37512C} = {A8746B6B-6449-436A-9F16-D24566904925}
+		{A8746B6B-6449-436A-9F16-D24566904925} = {F2EDD50C-CD3C-4623-813D-D4D23F1C7A9C}
+		{27A42768-3ECB-4A07-A2B3-A9354808A464} = {F2EDD50C-CD3C-4623-813D-D4D23F1C7A9C}
+		{255F7431-9378-4DE8-A428-07BDF8D7C7D5} = {F2EDD50C-CD3C-4623-813D-D4D23F1C7A9C}
+		{DB540865-6B40-4D04-ABCE-82A42495B6E8} = {F2EDD50C-CD3C-4623-813D-D4D23F1C7A9C}
+		{90D72B37-D6FC-479A-91D3-534BBCB3D4FA} = {255F7431-9378-4DE8-A428-07BDF8D7C7D5}
+		{6860EC81-27BF-4DDE-95C9-84E862AB8907} = {255F7431-9378-4DE8-A428-07BDF8D7C7D5}
+		{C25A3BD1-1519-4C7C-AD2F-081B1DB0D2AF} = {D5054E01-00B5-4A27-B43F-FFE062E1D49A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {691045E6-FC7A-4DB6-A2DE-2F28517D4C8C}
+	EndGlobalSection
+EndGlobal
