@@ -1,2 +1,2 @@
-# Toolsfactory.Home.Adapters.Heating.Wolf
-An adapter that translates packets coming from a Wolf heating and formated using the Knx BAOS Object Server specification to a Homie based Mqtt representation
+# Toolsfactory.Home.Adapters
+A set of different adapters that translate information from external subsystems like prices from gas stations into homie standard based mqtt messages consumable by many different home automation platforms
