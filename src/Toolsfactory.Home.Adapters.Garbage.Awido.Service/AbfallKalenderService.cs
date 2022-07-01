@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Toolsfactory.Protocols.Homie.Devices;
 
-namespace Toolsfactory.Home.Adapters.Garbage.Awido.Service
+namespace Toolsfactory.Home.Adapters.Garbage.Awido
 {
     public class AbfallKalenderService : BackgroundService
     {

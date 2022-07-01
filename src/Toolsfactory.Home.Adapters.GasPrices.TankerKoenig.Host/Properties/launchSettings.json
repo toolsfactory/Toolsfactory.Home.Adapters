@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Toolsfactory.Home.Adapters.Gasprices.Tankerkoenig.Host": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "environment": "development"
+      }
+    }
+  }
+}

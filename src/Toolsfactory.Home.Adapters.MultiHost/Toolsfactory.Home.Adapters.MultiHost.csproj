@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<OutputType>Exe</OutputType>
+	<TargetFramework>net6.0</TargetFramework>
+	<UserSecretsId>bd7171dd-f991-4a94-92b0-8ae8e05d3bc5</UserSecretsId>
+	<AssemblyName>multihost.host</AssemblyName>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+	<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+	<PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+	<PackageReference Include="Tiveria.Common" Version="1.3.3" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+	<ProjectReference Include="..\Toolsfactory.Home.Adapters.Common\Toolsfactory.Home.Adapters.Common.csproj" />
+	<ProjectReference Include="..\Toolsfactory.Home.Adapters.Garbage.Awido.Service\Toolsfactory.Home.Adapters.Garbage.Awido.csproj" />
+	<ProjectReference Include="..\Toolsfactory.Home.Adapters.GasPrices.TankerKoenig.Service\Toolsfactory.Home.Adapters.Gasprices.TankerKoenig.csproj" />
+	<ProjectReference Include="..\Toolsfactory.Home.Adapters.Heating.Wolf.Service\Toolsfactory.Home.Adapters.Heating.Wolf.csproj" />
+	<ProjectReference Include="..\Toolsfactory.Home.Adapters.Powermeter.D0\Toolsfactory.Home.Adapters.Powermeter.D0.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<None Update="appsettings.development.json">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	</None>
+	<None Update="appsettings.json">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	</None>
+	<None Update="appsettings.production.json">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	</None>
+	<None Update="install.sh">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+	<None Update="multihost.service">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	</None>
+  </ItemGroup>
+</Project>

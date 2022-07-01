@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "Tiveria.Home.Abfallkalender.Service": {
+    "Toolsfactory.Home.Adapters.Garbage.Awido.Host": {
       "commandName": "Project",
       "environmentVariables": {
-        "environment": "Development"
+        "environment": "development"
       }
     }
   }

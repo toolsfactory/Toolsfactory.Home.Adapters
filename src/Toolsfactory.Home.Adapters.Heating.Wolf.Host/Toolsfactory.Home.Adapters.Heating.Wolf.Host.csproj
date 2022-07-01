@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Toolsfactory.Home.Adapters.Common\Toolsfactory.Home.Adapters.Common.csproj" />
-    <ProjectReference Include="..\Toolsfactory.Home.Adapters.Heating.Wolf.Service\Toolsfactory.Home.Adapters.Heating.Wolf.Service.csproj" />
+    <ProjectReference Include="..\Toolsfactory.Home.Adapters.Heating.Wolf.Service\Toolsfactory.Home.Adapters.Heating.Wolf.csproj" />
   </ItemGroup>
 
   <ItemGroup>

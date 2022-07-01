@@ -4,7 +4,7 @@ using Tiveria.Common.Extensions;
 using Toolsfactory.Protocols.Homie.Devices;
 using Toolsfactory.Protocols.Homie.Devices.Properties;
 
-namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
+namespace Toolsfactory.Home.Adapters.Heating.Wolf
 {
     public record PropertyEntry(int Id, string DptId, BaseProperty Property);
     public class HomieEnvironmentBuilder

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Toolsfactory.Protocols.Homie.Devices;
 
-namespace Toolsfactory.Home.Adapters.Garbage.Awido.Service
+namespace Toolsfactory.Home.Adapters.Garbage.Awido
 {
     public class AbfallkalenderOptions
     {

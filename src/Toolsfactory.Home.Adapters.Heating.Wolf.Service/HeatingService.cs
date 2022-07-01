@@ -1,23 +1,16 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Tiveria.Common;
 using Tiveria.Common.Extensions;
-using Tiveria.Home.Knx.Datapoint;
 using Tiveria.Home.Knx.IP;
 using Tiveria.Home.Knx.IP.Structures;
 using Tiveria.Home.Knx.ObjectServer;
 using Toolsfactory.Protocols.Homie.Devices;
 
-namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
+namespace Toolsfactory.Home.Adapters.Heating.Wolf
 {
     public class HeatingService : BackgroundService
     {
@@ -26,7 +19,6 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
 
         #region private fields
         private readonly ILogger<HeatingService> _logger;
-        private readonly HttpClient _httpClient;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IOptions<HeatingOptions> _options;
         private readonly HomieEnvironmentBuilder _homieEnv;

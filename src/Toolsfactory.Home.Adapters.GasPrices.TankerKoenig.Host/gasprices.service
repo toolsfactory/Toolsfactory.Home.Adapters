@@ -1,0 +1,17 @@
+[Unit]
+Description=Gasprices from Tankerkoenig for Homie
+After=network.target
+
+[Service]
+ExecStart=/usr/share/homie-Gasprices/Gasprices.host
+Restart=always
+User=pi
+# Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
+Group=nogroup
+WorkingDirectory=/usr/share/homie-Gasprices
+Environment=PATH=/usr/bin:/usr/local/bin:/usr/share/dotnet:/opt/dotnet/shared:/opt/dotnet
+Environment=Gasprices_CONF=/etc/homie-adapters/Gasprices
+Environment=DOTNET_ROOT=/opt/dotnet
+
+[Install]
+WantedBy=multi-user.target

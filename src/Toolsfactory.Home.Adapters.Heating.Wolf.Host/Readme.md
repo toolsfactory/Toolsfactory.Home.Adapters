@@ -7,6 +7,6 @@
 
 ### Installation on Linux
 
-- copy file `gasprices.service` to the `/etc/systemd/system/`folder 
-- start the service: `systemctl start gasprices`
-- switch autostart for the service on: `systemctl enable gasprices` 
+- copy file `Gasprices.service` to the `/etc/systemd/system/`folder 
+- start the service: `systemctl start Gasprices`
+- switch autostart for the service on: `systemctl enable Gasprices` 

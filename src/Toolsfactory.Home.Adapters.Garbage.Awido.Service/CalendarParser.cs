@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Toolsfactory.Home.Adapters.Garbage.Awido.Service
+namespace Toolsfactory.Home.Adapters.Garbage.Awido
 {
     public class CalendarParser
     {

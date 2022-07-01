@@ -1,0 +1,22 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {
+        "environment": "development"
+      },
+      "distributionName": ""
+    },
+    "MultiHost all": {
+      "commandName": "Project",
+      "commandLineArgs": "all",
+      "environmentVariables": {
+        "environment": "development"
+      }
+    },
+    "MultiHost garbage": {
+      "commandName": "Project",
+      "commandLineArgs": "garbage"
+    }
+  }
+}

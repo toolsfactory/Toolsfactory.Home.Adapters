@@ -1,13 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
-using System.Globalization;
-using System.IO;
 using System.Threading.Tasks;
-using Toolsfactory.Protocols.Homie.Devices;
 using Toolsfactory.Home.Adapters.Common;
-using Toolsfactory.Home.Adapters.Garbage.Awido.Service;
+using Toolsfactory.Protocols.Homie.Devices;
 
 namespace Toolsfactory.Home.Adapters.Garbage.Awido.Host
 {

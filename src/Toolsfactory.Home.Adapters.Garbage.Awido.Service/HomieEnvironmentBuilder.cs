@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Toolsfactory.Protocols.Homie.Devices;
 using Toolsfactory.Protocols.Homie.Devices.Properties;
 
-namespace Toolsfactory.Home.Adapters.Garbage.Awido.Service
+namespace Toolsfactory.Home.Adapters.Garbage.Awido
 {
     public class HomieEnvironmentBuilder
     {

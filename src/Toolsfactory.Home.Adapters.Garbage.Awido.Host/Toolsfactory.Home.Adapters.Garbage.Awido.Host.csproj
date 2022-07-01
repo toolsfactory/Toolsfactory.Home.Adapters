@@ -34,7 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\libs\Toolsfactory.Protocols.Homie\src\Toolsfactory.Protocols.Homie\Toolsfactory.Protocols.Homie.csproj" />
     <ProjectReference Include="..\Toolsfactory.Home.Adapters.Common\Toolsfactory.Home.Adapters.Common.csproj" />
-    <ProjectReference Include="..\Toolsfactory.Home.Adapters.Garbage.Awido.Service\Toolsfactory.Home.Adapters.Garbage.Awido.Service.csproj" />
+    <ProjectReference Include="..\Toolsfactory.Home.Adapters.Garbage.Awido.Service\Toolsfactory.Home.Adapters.Garbage.Awido.csproj" />
   </ItemGroup>
 
   <ItemGroup>

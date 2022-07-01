@@ -1,12 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.CommandLine;
 using Toolsfactory.Home.Adapters.Common;
-using Toolsfactory.Home.Adapters.Heating.Wolf.Service;
 using Toolsfactory.Protocols.Homie.Devices;
 
 namespace Toolsfactory.Home.Adapters.Heating.Wolf.Host

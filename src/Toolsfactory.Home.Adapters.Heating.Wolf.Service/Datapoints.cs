@@ -1,4 +1,4 @@
-﻿namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
+﻿namespace Toolsfactory.Home.Adapters.Heating.Wolf
 {
     public static class Datapoints
     {

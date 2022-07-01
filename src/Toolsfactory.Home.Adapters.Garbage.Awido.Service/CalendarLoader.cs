@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Toolsfactory.Home.Adapters.Garbage.Awido.Service
+namespace Toolsfactory.Home.Adapters.Garbage.Awido
 {
     public class CalendarLoader
     {

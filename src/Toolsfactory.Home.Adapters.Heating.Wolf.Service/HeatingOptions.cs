@@ -1,6 +1,6 @@
 ﻿using Toolsfactory.Protocols.Homie.Devices;
 
-namespace Toolsfactory.Home.Adapters.Heating.Wolf.Service
+namespace Toolsfactory.Home.Adapters.Heating.Wolf
 {
     public class HeatingOptions
     {
