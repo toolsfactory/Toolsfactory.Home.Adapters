@@ -17,6 +17,10 @@
     "MultiHost garbage": {
       "commandName": "Project",
       "commandLineArgs": "garbage"
+    },
+    "MultiHost weather": {
+      "commandName": "Project",
+      "commandLineArgs": "weather"
     }
   }
 }

@@ -4,13 +4,11 @@ using Tiveria.Common.Extensions;
 using Toolsfactory.Protocols.Homie.Devices;
 using Toolsfactory.Protocols.Homie.Devices.Properties;
 
-namespace Toolsfactory.Home.Adapters.Heating.Wolf
+namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
 {
     public record PropertyEntry(int Id, string DptId, BaseProperty Property);
     public class HomieEnvironmentBuilder
     {
-        private const string FormatPropertyKey = "nextformat";
-
         private readonly string _deviceId;
         private readonly string _deviceName;
         private readonly List<Node>? _homieDeviceNodes;
@@ -19,7 +17,7 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf
 
         public HomieDeviceHost DeviceHost { get; private set; }
         public Device RootDevice { get; private set; }
-        public Dictionary<int, PropertyEntry> MappedProperties { get; private set; } = new Dictionary<int, PropertyEntry>();
+        public Dictionary<string, BaseProperty> MappedProperties { get; private set; } = new ();
         public bool IsStarted { get { return (DeviceHost == null) ? false : DeviceHost.IsStarted; } }
 
 
@@ -62,22 +60,20 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf
                 {
                     foreach (var property in node.Properties)
                     {
-                        if (DPT2HomieDataConverter.TryGetHomiePropertyTypeFromDptId(property.DptId, out var htype))
+                        BaseProperty? homieprop = null;
+                        switch (property.Type)
                         {
-                            BaseProperty? homieprop = null;
-                            switch (htype)
-                            {
-                                case "boolean": homieprop = new BooleanProperty(homienode, property.DptName.ToLowerInvariant(), property.Name, settable: property.Writeable); break;
-                                case "integer": homieprop = new IntegerProperty(homienode, property.DptName.ToLowerInvariant(), property.Name, settable: property.Writeable); break;
-                                case "float": homieprop = new FloatProperty(homienode, property.DptName.ToLowerInvariant(), property.Name, settable: property.Writeable); break;
-                                    default: break;
-                            }
+                            case "boolean": homieprop = new BooleanProperty(homienode, property.Name.ToLowerInvariant(), property.Name); break;
+                            case "integer": homieprop = new IntegerProperty(homienode, property.Name.ToLowerInvariant(), property.Name); break;
+                            case "float": homieprop = new FloatProperty(homienode, property.Name.ToLowerInvariant(), property.Name); break;
+                            case "datetime": homieprop = new  DateTimeProperty(homienode, property.Name.ToLowerInvariant(), property.Name); break;
+                            default: break;
+                        }
 
-                            if (homieprop != null)
-                            {
-                                homienode.AddProperty(homieprop);
-                                MappedProperties.Add(property.Id, new(property.Id, property.DptId, homieprop));
-                            }
+                        if (homieprop != null)
+                        {
+                            homienode.AddProperty(homieprop);
+                            MappedProperties.Add(property.SourceName, homieprop);
                         }
                     }
                 }

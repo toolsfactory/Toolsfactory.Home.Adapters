@@ -26,6 +26,7 @@
 	<ProjectReference Include="..\Toolsfactory.Home.Adapters.GasPrices.TankerKoenig.Service\Toolsfactory.Home.Adapters.Gasprices.TankerKoenig.csproj" />
 	<ProjectReference Include="..\Toolsfactory.Home.Adapters.Heating.Wolf.Service\Toolsfactory.Home.Adapters.Heating.Wolf.csproj" />
 	<ProjectReference Include="..\Toolsfactory.Home.Adapters.Powermeter.D0\Toolsfactory.Home.Adapters.Powermeter.D0.csproj" />
+	<ProjectReference Include="..\Toolsfactory.Home.Adapters.Weather.WeatherLogger2\Toolsfactory.Home.Adapters.Weather.WeatherLogger2.csproj" />
   </ItemGroup>
 
   <ItemGroup>

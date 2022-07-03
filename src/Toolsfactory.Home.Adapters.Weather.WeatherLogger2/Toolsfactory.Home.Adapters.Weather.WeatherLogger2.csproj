@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Tiveria.Common" Version="1.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\libs\Tiveria.Common.BasicHttpServer\src\Tiveria.Common.BasicHttpServer\Tiveria.Common.BasicHttpServer.csproj" />
+    <ProjectReference Include="..\..\libs\Toolsfactory.Protocols.Homie\src\Toolsfactory.Protocols.Homie\Toolsfactory.Protocols.Homie.csproj" />
+    <ProjectReference Include="..\Toolsfactory.Home.Adapters.Common\Toolsfactory.Home.Adapters.Common.csproj" />
+  </ItemGroup>
+
+</Project>

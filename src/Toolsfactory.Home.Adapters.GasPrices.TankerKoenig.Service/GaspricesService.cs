@@ -97,26 +97,29 @@ namespace Toolsfactory.Home.Adapters.Gasprices.Tankerkoenig
 
         private async Task PublishInfoAsync(PriceListDto data, CancellationToken token)
         {
-            foreach (var Gasprices in data.Prices)
+            await Task.Run(() =>
             {
-                var gsSettings = _options.Value.Tankerkoenig.GasStations.FirstOrDefault(x => x.StationId.ToUpperInvariant() == Gasprices.Key.ToUpperInvariant());
-                if (gsSettings != null)
+                foreach (var Gasprices in data.Prices)
                 {
-                    var id = gsSettings.StationId.ToLowerInvariant();
-                    if(_homieEnv.MappedProperties.TryGetValue(id + "-diesel", out var propD))
+                    var gsSettings = _options.Value.Tankerkoenig.GasStations.FirstOrDefault(x => x.StationId.ToUpperInvariant() == Gasprices.Key.ToUpperInvariant());
+                    if (gsSettings != null)
                     {
-                        propD.Value = (double) Gasprices.Value.Diesel;
-                    }
-                    if (_homieEnv.MappedProperties.TryGetValue(id + "-supere5", out var propE5))
-                    {
-                        propE5.Value = (double) Gasprices.Value.E5;
-                    }
-                    if (_homieEnv.MappedProperties.TryGetValue(id + "-supere10", out var propE10))
-                    {
-                        propE10.Value = (double) Gasprices.Value.E10;
+                        var id = gsSettings.StationId.ToLowerInvariant();
+                        if (_homieEnv.MappedProperties.TryGetValue(id + "-diesel", out var propD))
+                        {
+                            propD.Value = (double) Gasprices.Value.Diesel;
+                        }
+                        if (_homieEnv.MappedProperties.TryGetValue(id + "-supere5", out var propE5))
+                        {
+                            propE5.Value = (double) Gasprices.Value.E5;
+                        }
+                        if (_homieEnv.MappedProperties.TryGetValue(id + "-supere10", out var propE10))
+                        {
+                            propE10.Value = (double) Gasprices.Value.E10;
+                        }
                     }
                 }
-            }
+            });
         }
 
 

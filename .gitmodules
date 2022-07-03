@@ -4,3 +4,6 @@
 [submodule "libs/Toolsfactory.Protocols.D0"]
 	path = libs/Toolsfactory.Protocols.D0
 	url = https://github.com/toolsfactory/Toolsfactory.Protocols.D0.git
+[submodule "libs/Tiveria.Common.BasicHttpServer"]
+	path = libs/Tiveria.Common.BasicHttpServer
+	url = https://github.com/toolsfactory/Tiveria.Common.BasicHttpServer.git

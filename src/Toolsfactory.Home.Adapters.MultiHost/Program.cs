@@ -8,6 +8,7 @@ using Toolsfactory.Home.Adapters.Heating.Wolf;
 using Toolsfactory.Protocols.Homie.Devices;
 using Tiveria.Common.Extensions;
 using Toolsfactory.Home.Adapters.Powermeter.D0;
+using Toolsfactory.Home.Adapters.Weather.WeatherLogger2;
 
 namespace Toolsfactory.Home.Adapters.MultiHost
 {
@@ -98,30 +99,30 @@ namespace Toolsfactory.Home.Adapters.MultiHost
                             .Configure<AbfallkalenderOptions>(hostContext.Configuration.GetSection("services:garbage"))
                             .AddSingleton<IHostedService, AbfallKalenderService>();
                     }
-
                     if (command == "gasprices" || command.IsNullOrEmpty())
                     {
                         services
                             .Configure<GaspricesOptions>(hostContext.Configuration.GetSection("services:gasprices"))
                             .AddSingleton<IHostedService, GaspricesService>();
                     }
-
                     if (command == "heating" || command.IsNullOrEmpty())
                     {
                         services
                             .Configure<HeatingOptions>(hostContext.Configuration.GetSection("services:heating"))
                             .AddSingleton<IHostedService, HeatingService>();
                     }
-
                     if (command == "powermeter" || command.IsNullOrEmpty())
                     {
                         services
-                            .Configure<PowermeterConfig>(hostContext.Configuration.GetSection("services:d0powermeter"))
+                            .Configure<PowermeterConfig>(hostContext.Configuration.GetSection("services:powermeter"))
                             .AddSingleton<IHostedService, PowermeterService>();
                     }
-                    //                        .Configure<WeatherOptions>(hostContext.Configuration.GetSection("services:weather"))
-                    //                        .AddSingleton<IHostedService, WeatherProxyService>()
-
+                    if (command == "weather" || command.IsNullOrEmpty())
+                    {
+                        services
+                            .Configure<WeatherOptions>(hostContext.Configuration.GetSection("services:weather"))
+                            .AddSingleton<IHostedService, WeatherProxyService>();
+                    }
                 })
                 .RunConsoleAsync().ConfigureAwait(false);
         }
