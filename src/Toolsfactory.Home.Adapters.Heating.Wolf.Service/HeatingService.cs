@@ -40,11 +40,15 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("HeatingService starting");
             _logger.LogInformation("Service ready to start with delay: {startupdelay} sec", _options.Value.StartupDelaySeconds);
 
+            cancellationToken.Register(() =>
+            {
+                _logger.LogInformation("Service stop request received.");
+            });
+
             await Task.Delay(millisecondsDelay: _options.Value.StartupDelaySeconds * 1000, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-
             await base.StartAsync(cancellationToken);
         }
 
@@ -57,14 +61,7 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            SortedDictionary<int, int> dpsreceived = new();
             _logger.LogInformation("Service started.");
-            cancellationToken.Register(() =>
-            {
-                _logger.LogInformation("Service stop request received.");
-                foreach (var item in dpsreceived)
-                    Console.WriteLine(item.Key);
-            });
             await _homieEnv.StartAsync();
             TcpListener server = new TcpListener(new IPEndPoint(IPAddress.Any, _options.Value.LocalServer.Port));
 
@@ -73,54 +70,54 @@ namespace Toolsfactory.Home.Adapters.Heating.Wolf
             while (!cancellationToken.IsCancellationRequested)
             {
                 _logger.LogDebug("Waiting for connection requests");
-                TcpClient client = await server.AcceptTcpClientAsync();
+                TcpClient client = await server.AcceptTcpClientAsync(cancellationToken);
                 _logger.LogDebug("Remote Endpoint: {RemoteEndPoint}", client.Client.RemoteEndPoint);
                 NetworkStream stream = client.GetStream();
                 int inputlen = 0;
                 stream.Write(GETALL);
                 var input = new byte[1024];
                 var buffer = new byte[0];
-                // Loop to receive all the data sent by the client.
-                while ((inputlen = await stream.ReadAsync(input, 0, input.Length, cancellationToken)) != 0 && !cancellationToken.IsCancellationRequested)
+                try
                 {
-                    buffer = buffer.Merge(input, inputlen);
-
-                    /*
-                    Console.WriteLine(Environment.NewLine + "-------------------");
-                    Console.WriteLine(DateTime.Now.ToLongTimeString());
-                    Console.WriteLine($"New Bytes: {inputlen}");
-                    Console.WriteLine($"Total Bytes: {buffer.Length}");
-                    Console.WriteLine("Buffer: {0}", buffer.ToHex());
-                    */
-
-                    while (TryParseData(out var req, out var size, buffer))
+                    // Loop to receive all the data sent by the client.
+                    while ((inputlen = await stream.ReadAsync(input, 0, input.Length, cancellationToken)) != 0 && !cancellationToken.IsCancellationRequested)
                     {
-
-                        var header = new ConnectionHeader();
-                        var frame = new KnxNetIPFrame(new ObjectServerProtocolService(header, new SetDatapointValueResService(req.StartDataPoint, 0)));
-                        var answer = frame.ToBytes();
-                        stream.Write(answer);
-                        foreach (var item in req.DataPoints)
+                        _logger.LogDebug($"New Data size: {inputlen} ");
+                        buffer = buffer.Merge(input, inputlen);
+                        while (TryParseData(out var req, out var size, buffer))
                         {
-                            //Console.WriteLine($"{item.ID}: {item.Value.ToHex()}");
-                            if (!dpsreceived.ContainsKey(item.ID))
-                                dpsreceived.Add(item.ID, 0);
 
-                            if (_homieEnv.MappedProperties.TryGetValue(item.ID, out var propEntry))
+                            var header = new ConnectionHeader();
+                            var frame = new KnxNetIPFrame(new ObjectServerProtocolService(header, new SetDatapointValueResService(req.StartDataPoint, 0)));
+                            var answer = frame.ToBytes();
+                            stream.Write(answer);
+                            foreach (var item in req.DataPoints)
                             {
-                                if(DPT2HomieDataConverter.TryTranslateDptToHomie(item.Value, propEntry.DptId, out var value, out var homietype))
+                                _logger.LogDebug($"{item.ID} - Raw: {item.Value.ToHex(" ")}");
+
+                                if (_homieEnv.MappedProperties.TryGetValue(item.ID, out var propEntry))
                                 {
-                                    propEntry.Property.RawValue = value;
+                                    if (DPT2HomieDataConverter.TryTranslateDptToHomie(item.Value, propEntry.DptId, out var value, out var homietype))
+                                    {
+                                        _logger.LogDebug($"{item.ID} - Encoded: {value}");
+                                        propEntry.Property.RawValue = value;
+                                    }
                                 }
                             }
+                            buffer = buffer.Clone(size);
                         }
-                        buffer = buffer.Clone(size);
                     }
                 }
-
-                // Shutdown and end connection
-                client.Close();
-                _logger.LogDebug("Connection closed");
+                catch (IOException ex)
+                {
+                    _logger.LogError(ex, "Error reading from socket");
+                }
+                finally 
+                {
+                    // Shutdown and end connection
+                    client.Close();
+                    _logger.LogDebug("Connection closed");
+                }
             }
             server.Stop();
             await _homieEnv.StopAsync();

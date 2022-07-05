@@ -16,11 +16,24 @@
     },
     "MultiHost garbage": {
       "commandName": "Project",
-      "commandLineArgs": "garbage"
+      "commandLineArgs": "garbage",
+      "environmentVariables": {
+        "environment": "development"
+      }
     },
     "MultiHost weather": {
       "commandName": "Project",
-      "commandLineArgs": "weather"
+      "commandLineArgs": "weather",
+      "environmentVariables": {
+        "environment": "development"
+      }
+    },
+    "MultiHost heating": {
+      "commandName": "Project",
+      "commandLineArgs": "heating",
+      "environmentVariables": {
+        "environment": "development"
+      }
     }
   }
 }

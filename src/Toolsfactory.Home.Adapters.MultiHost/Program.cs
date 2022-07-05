@@ -23,7 +23,7 @@ namespace Toolsfactory.Home.Adapters.MultiHost
         /// <returns></returns>
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Console.WriteLine("MultiHost for Home Automation");
 
             var debugOption = new Option<bool>
             (new[] { "--debug", "-d" },
@@ -39,53 +39,32 @@ namespace Toolsfactory.Home.Adapters.MultiHost
                 AllowMultipleArgumentsPerToken = true
             };
 
-            var singleGarbageCmd = new Command("garbage");
-            var singleWeatherCmd = new Command("weather");
-            var singlePowermeterCmd = new Command("powermeter");
-            var singleGaspricesCmd  = new Command("gasprices");
-            var allCmd = new Command("all", "starts all known services");
-
-            var rootCmd = new RootCommand()
-            {
-                allCmd,
-                singleGarbageCmd,
-                singleWeatherCmd,
-                singlePowermeterCmd,
-                singleGaspricesCmd,
-                debugOption,
-                configDirOption
-            };
-            allCmd.SetHandler(async (debugOptionValue, configDirOptionValue) =>
-            {
-                await InitializeAllAsync(debugOptionValue, configDirOptionValue, "");
-            }, debugOption, configDirOption);
-
-            singleGarbageCmd.SetHandler(async (debugOptionValue, configDirOptionValue) =>
-            {
-                await InitializeAllAsync(debugOptionValue, configDirOptionValue, "garbage");
-            }, debugOption, configDirOption);
-
-            singleWeatherCmd.SetHandler(async (debugOptionValue, configDirOptionValue) =>
-            {
-                await InitializeAllAsync(debugOptionValue, configDirOptionValue, "weather");
-            }, debugOption, configDirOption);
-
-            singleGaspricesCmd.SetHandler(async (debugOptionValue, configDirOptionValue) =>
-            {
-                await InitializeAllAsync(debugOptionValue, configDirOptionValue, "gasprices");
-            }, debugOption, configDirOption);
-
-            singlePowermeterCmd.SetHandler(async (debugOptionValue, configDirOptionValue) =>
-            {
-                await InitializeAllAsync(debugOptionValue, configDirOptionValue, "powermeter");
-            }, debugOption, configDirOption);
+            var rootCmd = new RootCommand();
+            AddSubCommand(rootCmd, "weather", debugOption, configDirOption);
+            AddSubCommand(rootCmd, "garbage", debugOption, configDirOption);
+            AddSubCommand(rootCmd, "powermeter", debugOption, configDirOption);
+            AddSubCommand(rootCmd, "gasprices", debugOption, configDirOption);
+            AddSubCommand(rootCmd, "heating", debugOption, configDirOption);
+            AddSubCommand(rootCmd, "all", debugOption, configDirOption);
+            rootCmd.Add(debugOption);
+            rootCmd.Add(configDirOption);
 
             await rootCmd.InvokeAsync(args);
         }
 
+        private static void AddSubCommand(RootCommand root, string subcmd, Option<bool>? debugOpt, Option<string>? configDirOpt)
+        {
+            var sub = new Command(subcmd);
+            sub.SetHandler(async (debugOptionValue, configDirOptionValue) =>
+            {
+                await InitializeAllAsync(debugOptionValue, configDirOptionValue, subcmd);
+            }, debugOpt, configDirOpt);
+            root.Add(sub);
+        }
+
         static async Task InitializeAllAsync(bool debug, string configDir, string command)
         {
-            Console.WriteLine("MultiHost started for " + (command.IsNullOrEmpty() ? "all services" : command));
+            Console.WriteLine("MultiHost started for " +  command);
             var host = new ServiceHost<Program>("multihost", debug, configDir, "");
             await host.BuildBaslineHost(Array.Empty<string>())
                 .ConfigureServices((hostContext, services) =>
@@ -93,35 +72,35 @@ namespace Toolsfactory.Home.Adapters.MultiHost
                     services
                         .Configure<HomieMqttServerConfiguration>(hostContext.Configuration.GetSection("MqttServer"));
 
-                    if (command == "garbage" || command.IsNullOrEmpty())
+                    if (command == "garbage" || command == "all")
                     { 
                         services
                             .Configure<AbfallkalenderOptions>(hostContext.Configuration.GetSection("services:garbage"))
                             .AddSingleton<IHostedService, AbfallKalenderService>();
                     }
-                    if (command == "gasprices" || command.IsNullOrEmpty())
+                    if (command == "gasprices" || command == "all")
                     {
                         services
                             .Configure<GaspricesOptions>(hostContext.Configuration.GetSection("services:gasprices"))
                             .AddSingleton<IHostedService, GaspricesService>();
                     }
-                    if (command == "heating" || command.IsNullOrEmpty())
+                    if (command == "heating" || command == "all")
                     {
                         services
                             .Configure<HeatingOptions>(hostContext.Configuration.GetSection("services:heating"))
                             .AddSingleton<IHostedService, HeatingService>();
                     }
-                    if (command == "powermeter" || command.IsNullOrEmpty())
+                    if (command == "powermeter" || command == "all")
                     {
                         services
                             .Configure<PowermeterConfig>(hostContext.Configuration.GetSection("services:powermeter"))
                             .AddSingleton<IHostedService, PowermeterService>();
                     }
-                    if (command == "weather" || command.IsNullOrEmpty())
+                    if (command == "weather" || command == "all")
                     {
                         services
                             .Configure<WeatherOptions>(hostContext.Configuration.GetSection("services:weather"))
-                            .AddSingleton<IHostedService, WeatherProxyService>();
+                            .AddSingleton<IHostedService, WeatherService>();
                     }
                 })
                 .RunConsoleAsync().ConfigureAwait(false);

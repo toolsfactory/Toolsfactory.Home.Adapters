@@ -20,6 +20,7 @@ namespace Toolsfactory.Home.Adapters.Powermeter.D0
 
         private D0SerialTransport? _transport;
         private double _lastValue = -1;
+        private bool _started = false;
 
         public PowermeterService(ILoggerFactory loggerFactory, IOptions<PowermeterConfig> options, IOptions<HomieMqttServerConfiguration> mqttConfig, IHostApplicationLifetime hostApplicationLifetime)
         {
@@ -41,21 +42,24 @@ namespace Toolsfactory.Home.Adapters.Powermeter.D0
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogDebug($"DaemonService is starting.");
+            _logger.LogInformation($"PowermeterService is starting.");
             await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
             _logger.LogInformation("Startup delay: {startupdelay} secs", _options.Value.DelaySec);
 
             if (!TestTransportAndPort(_options.Value.SerialPort))
             {
-                _hostApplicationLifetime.StopApplication();
+                _logger.LogCritical("Error starting serial device. Service not started.");
                 return;
             }
             await _homieEnv.StartAsync();
             await base.StartAsync(cancellationToken);
+            _started = true;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (!_started)
+                return;
 
             stoppingToken.Register(() =>
                 _logger.LogDebug("DeamonService stop request received."));

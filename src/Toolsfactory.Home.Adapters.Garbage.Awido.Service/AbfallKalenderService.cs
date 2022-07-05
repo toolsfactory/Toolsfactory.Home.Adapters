@@ -29,7 +29,7 @@ namespace Toolsfactory.Home.Adapters.Garbage.Awido
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogDebug("Service is starting.");
+            _logger.LogInformation("GarbageService starting");
 
             stoppingToken.Register(() =>
                 _logger.LogDebug("Service stop request received."));

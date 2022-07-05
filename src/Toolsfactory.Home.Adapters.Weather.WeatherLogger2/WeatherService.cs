@@ -15,10 +15,10 @@ using Toolsfactory.Protocols.Homie.Devices;
 
 namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
 {
-    public class WeatherProxyService : BackgroundService
+    public class WeatherService : BackgroundService
     {
         #region private fields
-        private readonly ILogger<WeatherProxyService> _logger;
+        private readonly ILogger<WeatherService> _logger;
         private readonly HttpClient _httpClient;
         private readonly IOptions<WeatherOptions> _options;
         private readonly Tiveria.Common.BasicHttpServer.HttpServer _server;
@@ -26,7 +26,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
         #endregion
 
         #region constructor
-        public WeatherProxyService(ILoggerFactory loggerfactory, IHttpClientFactory httpClientFactory, IOptions<WeatherOptions> options, IOptions<HomieMqttServerConfiguration> mqttConfig)
+        public WeatherService(ILoggerFactory loggerfactory, IHttpClientFactory httpClientFactory, IOptions<WeatherOptions> options, IOptions<HomieMqttServerConfiguration> mqttConfig)
         {
             Ensure.That(loggerfactory).IsNotNull();
             Ensure.That(httpClientFactory).IsNotNull();
@@ -34,7 +34,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
             Ensure.That(options.Value).IsNotNull();
 
             _options = options;
-            _logger = loggerfactory.CreateLogger<WeatherProxyService>();
+            _logger = loggerfactory.CreateLogger<WeatherService>();
             _httpClient = httpClientFactory.CreateClient("Wheatherserviceproxy");
             _server = new HttpServer(loggerfactory.CreateLogger<HttpServer>(), _options.Value.LocalServer.Port);
             _homieEnv = new HomieEnvironmentBuilder(_options.Value.HomieDeviceIdentifier, _options.Value.HomieDeviceName, _options.Value.HomieDeviceNodes, mqttConfig.Value, loggerfactory);
@@ -43,6 +43,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("WeatherService starting");
             _logger.LogInformation("Service ready to start with delay: {startupdelay} sec", _options.Value.StartupDelaySeconds);
 
             await Task.Delay(millisecondsDelay: _options.Value.StartupDelaySeconds * 1000, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -97,6 +98,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
             if(_homieEnv.MappedProperties.TryGetValue(key, out var properties))
             {
                 properties.RawValue = value;
+                _logger.DebugParameterSent(key, value);
             }
         }
 
@@ -138,13 +140,13 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
     #region logging helper class for high performance logging (using static methods as in Microsoft core libs)
     internal static class Log
     {
-        private static Action<ILogger, string, Uri, Exception> _updateSentToEndpoint = LoggerMessage.Define<string, Uri>(
+        private static Action<ILogger, string, object, Exception> debugParameterSent = LoggerMessage.Define<string, object>(
             LogLevel.Debug,
             new EventId(1),
-            "Sent '{value}' to '{endpoint}'");
-        public static ILogger UpdateSent(this ILogger logger, Uri endpoint, string value)
+            "Set '{key}' to '{value}'");
+        public static ILogger DebugParameterSent(this ILogger logger, string key, object value)
         {
-            _updateSentToEndpoint(logger, value, endpoint, null);
+            debugParameterSent(logger, key, value, null);
             return logger;
         }
     }

@@ -53,7 +53,7 @@ namespace Toolsfactory.Home.Adapters.Gasprices.Tankerkoenig
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Service is starting.");
+            _logger.LogInformation("GaspricesService starting");
 
             stoppingToken.Register(() =>
                 _logger.LogInformation("Service stop request received."));
@@ -99,192 +99,46 @@ namespace Toolsfactory.Home.Adapters.Gasprices.Tankerkoenig
         {
             await Task.Run(() =>
             {
-                foreach (var Gasprices in data.Prices)
+                foreach (var gasprices in data.Prices)
                 {
-                    var gsSettings = _options.Value.Tankerkoenig.GasStations.FirstOrDefault(x => x.StationId.ToUpperInvariant() == Gasprices.Key.ToUpperInvariant());
+                    var gsSettings = _options.Value.Tankerkoenig.GasStations.FirstOrDefault(x => x.StationId.ToUpperInvariant() == gasprices.Key.ToUpperInvariant());
                     if (gsSettings != null)
                     {
                         var id = gsSettings.StationId.ToLowerInvariant();
                         if (_homieEnv.MappedProperties.TryGetValue(id + "-diesel", out var propD))
                         {
-                            propD.Value = (double) Gasprices.Value.Diesel;
+                            propD.Value = (double) gasprices.Value.Diesel.Value;
+                            _logger.DebugGasPriceChange(gasprices.Value.Diesel.Value, "Diesel", id);
                         }
                         if (_homieEnv.MappedProperties.TryGetValue(id + "-supere5", out var propE5))
                         {
-                            propE5.Value = (double) Gasprices.Value.E5;
+                            propE5.Value = (double) gasprices.Value.E5;
+                            _logger.DebugGasPriceChange(gasprices.Value.E5.Value, "Super E5", id);
                         }
                         if (_homieEnv.MappedProperties.TryGetValue(id + "-supere10", out var propE10))
                         {
-                            propE10.Value = (double) Gasprices.Value.E10;
+                            propE10.Value = (double) gasprices.Value.E10;
+                            _logger.DebugGasPriceChange(gasprices.Value.E10.Value, "Super E10", id);
                         }
                     }
                 }
             });
         }
-
-
-        #region Logging helpers
-
-        private static Action<ILogger, string, Uri, Exception> _updateSentToEndpoint = LoggerMessage.Define<string, Uri>(
-            LogLevel.Information,
-            new EventId(1),
-            "Sent '{value}' to '{endpoint}'");
-
-        #endregion
-
     }
 
-    public class ObjectDumper
+    #region logging helper class for high performance logging (using static methods as in Microsoft core libs)
+    internal static class Log
     {
-        private int _level;
-        private readonly int _indentSize;
-        private readonly StringBuilder _stringBuilder;
-        private readonly List<int> _hashListOfFoundElements;
-
-        private ObjectDumper(int indentSize)
+        private static Action<ILogger, float, string, string, Exception> _logGaspriceChange = LoggerMessage.Define<float, string, string>(
+            LogLevel.Debug,
+            new EventId(1),
+            "Set '{value}' for {gas} on {stationid}");
+        public static ILogger DebugGasPriceChange(this ILogger logger, float value, string gas, string station)
         {
-            _indentSize = indentSize;
-            _stringBuilder = new StringBuilder();
-            _hashListOfFoundElements = new List<int>();
-        }
-
-        public static string Dump(object element)
-        {
-            return Dump(element, 2);
-        }
-
-        public static string Dump(object element, int indentSize)
-        {
-            var instance = new ObjectDumper(indentSize);
-            return instance.DumpElement(element);
-        }
-
-        private string DumpElement(object element)
-        {
-            if (element == null || element is ValueType || element is string)
-            {
-                Write(FormatValue(element));
-            }
-            else
-            {
-                var objectType = element.GetType();
-                if (!typeof(IEnumerable).IsAssignableFrom(objectType))
-                {
-                    Write("{{{0}}}", objectType.FullName);
-                    _hashListOfFoundElements.Add(element.GetHashCode());
-                    _level++;
-                }
-
-                var enumerableElement = element as IEnumerable;
-                if (enumerableElement != null)
-                {
-                    foreach (object item in enumerableElement)
-                    {
-                        if (item is IEnumerable && !(item is string))
-                        {
-                            _level++;
-                            DumpElement(item);
-                            _level--;
-                        }
-                        else
-                        {
-                            if (!AlreadyTouched(item))
-                                DumpElement(item);
-                            else
-                                Write("{{{0}}} <-- bidirectional reference found", item.GetType().FullName);
-                        }
-                    }
-                }
-                else
-                {
-                    MemberInfo[] members = element.GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance);
-                    foreach (var memberInfo in members)
-                    {
-                        var fieldInfo = memberInfo as FieldInfo;
-                        var propertyInfo = memberInfo as PropertyInfo;
-
-                        if (fieldInfo == null && propertyInfo == null)
-                            continue;
-
-                        var type = fieldInfo != null ? fieldInfo.FieldType : propertyInfo.PropertyType;
-                        object value = fieldInfo != null
-                                           ? fieldInfo.GetValue(element)
-                                           : propertyInfo.GetValue(element, null);
-
-                        if (type.IsValueType || type == typeof(string))
-                        {
-                            Write("{0}: {1}", memberInfo.Name, FormatValue(value));
-                        }
-                        else
-                        {
-                            var isEnumerable = typeof(IEnumerable).IsAssignableFrom(type);
-                            Write("{0}: {1}", memberInfo.Name, isEnumerable ? "..." : "{ }");
-
-                            var alreadyTouched = !isEnumerable && AlreadyTouched(value);
-                            _level++;
-                            if (!alreadyTouched)
-                                DumpElement(value);
-                            else
-                                Write("{{{0}}} <-- bidirectional reference found", value.GetType().FullName);
-                            _level--;
-                        }
-                    }
-                }
-
-                if (!typeof(IEnumerable).IsAssignableFrom(objectType))
-                {
-                    _level--;
-                }
-            }
-
-            return _stringBuilder.ToString();
-        }
-
-        private bool AlreadyTouched(object value)
-        {
-            if (value == null)
-                return false;
-
-            var hash = value.GetHashCode();
-            for (var i = 0; i < _hashListOfFoundElements.Count; i++)
-            {
-                if (_hashListOfFoundElements[i] == hash)
-                    return true;
-            }
-            return false;
-        }
-
-        private void Write(string value, params object[] args)
-        {
-            var space = new string(' ', _level * _indentSize);
-
-            if (args != null)
-                value = string.Format(value, args);
-
-            _stringBuilder.AppendLine(space + value);
-        }
-
-        private string FormatValue(object o)
-        {
-            if (o == null)
-                return ("null");
-
-            if (o is DateTime)
-                return (((DateTime)o).ToShortDateString());
-
-            if (o is string)
-                return string.Format("\"{0}\"", o);
-
-            if (o is char && (char)o == '\0')
-                return string.Empty;
-
-            if (o is ValueType)
-                return (o.ToString());
-
-            if (o is IEnumerable)
-                return ("...");
-
-            return ("{ }");
+            _logGaspriceChange(logger, value, gas, station, null);
+            return logger;
         }
     }
+
+    #endregion
 }
