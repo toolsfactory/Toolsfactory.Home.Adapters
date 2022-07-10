@@ -48,7 +48,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: "./src/Toolsfactory.Home.Adapters.MultiHost/Dockerfile"
+          file: ./src/Toolsfactory.Home.Adapters.MultiHost/dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
