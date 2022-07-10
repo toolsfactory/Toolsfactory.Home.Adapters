@@ -3,14 +3,14 @@ Description=Multihost - Gasprices, Abfall and Weather for OpenHab
 After=network.target
 
 [Service]
-ExecStart=/usr/share/ohmultihost/multihost.host
+ExecStart=/usr/share/homie-multihost/multihost.host
 Restart=always
 User=pi
 # Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
 Group=nogroup
-WorkingDirectory=/usr/share/ohmultihost
+WorkingDirectory=/usr/share/homie-multihost
 Environment=PATH=/usr/bin:/usr/local/bin:/usr/share/dotnet:/opt/dotnet/shared:/opt/dotnet
-Environment=MULTIHOST_CONF=/etc/ohadapters/multihost
+Environment=MULTIHOST_CONF=/etc/homie-multihost/multihost
 Environment=DOTNET_ROOT=/opt/dotnet
 
 [Install]

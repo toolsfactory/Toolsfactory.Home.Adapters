@@ -6,10 +6,10 @@ if [ `whoami` != root ]; then
 fi
 
 SERVICE=multihost
-SERVICEDIR="/usr/share/oh${SERVICE}"
-CONFIGDIR="/etc/ohadapters/${SERVICE}"
-LOGDIR="/var/log/ohadapters"
-
+SERVICESUBDIR="homie-${SERVICE}"
+SERVICEDIR="/usr/share/${SERVICESUBDIR}"
+CONFIGDIR="/etc/${SERVICESUBDIR}"
+LOGDIR="/var/log/${SERVICESUBDIR}"
 
 echo "Service installer starting"
 echo "--------------------------"

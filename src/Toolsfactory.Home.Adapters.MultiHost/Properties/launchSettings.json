@@ -34,6 +34,9 @@
       "environmentVariables": {
         "environment": "development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker"
     }
   }
 }
