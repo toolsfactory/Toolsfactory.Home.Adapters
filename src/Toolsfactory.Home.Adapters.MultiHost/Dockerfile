@@ -27,4 +27,9 @@ RUN dotnet publish "Toolsfactory.Home.Adapters.MultiHost.csproj" -c Release -o /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "multihost.host.dll"]
+ENV MULTIHOST_CONF=/etc/homie-multihost
+VOLUME ["/etc/homie-multihost"]
+EXPOSE 12004/tcp
+EXPOSE 8081/tcp
+RUN /bin/bash -c "rm appsettings.*; rm *.pdb"
+ENTRYPOINT ["dotnet", "multihost.host.dll", "all"]

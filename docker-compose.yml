@@ -3,6 +3,18 @@ version: '3.4'
 services:
   toolsfactory.home.adapters.multihost:
     image: ${DOCKER_REGISTRY-}toolsfactoryhomeadaptersmultihost
+    ports:
+      - 12004:12004
+      - 8081:8081
+    environment:
+      - MULTIHOST_CONF=/etc/homie-multihost
+      - ENVIRONMENT=production
+    env_file:
+      - secrets.env
+    volumes:
+      - "c:/Users/micha/source/repos/toolsfactory/Toolsfactory.Home.Adapters/src/Toolsfactory.Home.Adapters.MultiHost/:/etc/homie-multihost/:ro"
+      - "c:/Users/micha/source/repos/toolsfactory/Toolsfactory.Home.Adapters/.logs/:/var/log/toolsfactory/:rw"
+##      - "C:/Users/micha/AppData/Roaming/Microsoft/UserSecrets/bd7171dd-f991-4a94-92b0-8ae8e05d3bc5/:/root/.microsoft/usersecrets/bd7171dd-f991-4a94-92b0-8ae8e05d3bc5:ro"
     build:
       context: .
       dockerfile: src/Toolsfactory.Home.Adapters.MultiHost/Dockerfile

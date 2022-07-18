@@ -22,6 +22,9 @@ namespace Toolsfactory.Home.Adapters.Common
         public ServiceHost(string servicename, bool debug = false, string? configDirectory = null, string? configFile = null)
         {
             Ensure.That(servicename).IsNotNullOrWhiteSpace();
+            var myWriter = new ConsoleTraceListener();
+            Trace.Listeners.Add(myWriter); 
+            Debug.AutoFlush = true;
             _debug = debug;
             _configFile = configFile ?? String.Empty;
             _envName = Environment.GetEnvironmentVariable("environment")?.ToLowerInvariant() ?? "production";
@@ -89,16 +92,16 @@ namespace Toolsfactory.Home.Adapters.Common
 
                 return builder
                     .SetBasePath(_configDir)
-                    .AddEnvironmentVariables()
                     .AddJsonFile($"appsettings.json", false)
                     .AddJsonFile($"appsettings.{_envName}.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables()
                     .AddUserSecrets<T>(true);
             }
             else
             {
                 return builder
-                    .AddEnvironmentVariables()
                     .AddJsonFile(_configFile)
+                    .AddEnvironmentVariables()
                     .AddUserSecrets<T>(true);
             }
         }

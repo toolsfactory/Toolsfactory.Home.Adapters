@@ -37,6 +37,9 @@
     },
     "Docker": {
       "commandName": "Docker"
+    },
+    "MultiHost": {
+      "commandName": "Project"
     }
   }
 }

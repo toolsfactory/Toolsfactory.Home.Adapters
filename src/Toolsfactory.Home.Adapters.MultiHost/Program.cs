@@ -9,6 +9,7 @@ using Toolsfactory.Protocols.Homie.Devices;
 using Tiveria.Common.Extensions;
 using Toolsfactory.Home.Adapters.Powermeter.D0;
 using Toolsfactory.Home.Adapters.Weather.WeatherLogger2;
+using System.Collections;
 
 namespace Toolsfactory.Home.Adapters.MultiHost
 {
@@ -24,6 +25,7 @@ namespace Toolsfactory.Home.Adapters.MultiHost
         static async Task Main(string[] args)
         {
             Console.WriteLine("MultiHost for Home Automation");
+            PrintAllEnvVars();
 
             var debugOption = new Option<bool>
             (new[] { "--debug", "-d" },
@@ -49,10 +51,27 @@ namespace Toolsfactory.Home.Adapters.MultiHost
             rootCmd.Add(debugOption);
             rootCmd.Add(configDirOption);
 
+            rootCmd.SetHandler(async (debugOptionValue, configDirOptionValue) =>
+            {
+                await InitializeAllAsync(debugOptionValue, configDirOptionValue, "all");
+            }, debugOption, configDirOption);
+
             await rootCmd.InvokeAsync(args);
         }
 
-        private static void AddSubCommand(RootCommand root, string subcmd, Option<bool>? debugOpt, Option<string>? configDirOpt)
+        private static void PrintAllEnvVars()
+        {
+            Console.WriteLine("Env Variables");
+            Console.WriteLine("-------------");
+            Console.WriteLine();
+            foreach(DictionaryEntry env in System.Environment.GetEnvironmentVariables())
+            {
+                Console.WriteLine($"{env.Key} = {env.Value}");
+            }
+            Console.WriteLine();
+        }
+
+        private static void AddSubCommand(RootCommand root, string subcmd, Option<bool> debugOpt, Option<string> configDirOpt)
         {
             var sub = new Command(subcmd);
             sub.SetHandler(async (debugOptionValue, configDirOptionValue) =>
