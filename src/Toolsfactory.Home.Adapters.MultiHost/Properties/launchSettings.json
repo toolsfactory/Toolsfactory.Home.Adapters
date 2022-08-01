@@ -11,7 +11,8 @@
       "commandName": "Project",
       "commandLineArgs": "all",
       "environmentVariables": {
-        "environment": "development"
+        "environment": "development",
+        "services__gasprices__Tankerkoenig__ApiKey": "22ce7c26-b53e-be79-5e99-ce59dec2a18e"
       }
     },
     "MultiHost garbage": {
@@ -36,10 +37,22 @@
       }
     },
     "Docker": {
-      "commandName": "Docker"
+      "commandName": "Docker",
+      "commandLineArgs": "-c /etc/multihost",
+      "environmentVariables": {
+        "_MULTIHOST_CONFIGDIR": "/etc/multihost"
+      },
+      "DockerfileRunArguments": "-v  \"d:\\temp\\:/etc/multihost/:ro\""
     },
     "MultiHost": {
       "commandName": "Project"
+    },
+    "MultiHost gasprices": {
+      "commandName": "Project",
+      "commandLineArgs": "gasprices",
+      "environmentVariables": {
+        "environment": "development"
+      }
     }
   }
 }

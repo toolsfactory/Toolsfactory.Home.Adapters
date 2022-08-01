@@ -38,7 +38,7 @@ namespace Toolsfactory.Home.Adapters.Common
         private void SetupConfiguration(string? configDirectory)
         {
             WriteDebug("Checking configuration");
-            if (_configFile.IsNullOrWhiteSpace())
+            if (_configFile.IsNullOrEmpty())
             {
                 _configDir = GetConfigurationDirectory(configDirectory);
                 WriteDebug($"Using config dir: {_configDir}");
@@ -90,20 +90,19 @@ namespace Toolsfactory.Home.Adapters.Common
             if (_useConfigDir)
             {
 
-                return builder
+                builder
                     .SetBasePath(_configDir)
                     .AddJsonFile($"appsettings.json", false)
-                    .AddJsonFile($"appsettings.{_envName}.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables()
-                    .AddUserSecrets<T>(true);
+                    .AddJsonFile($"appsettings.{_envName}.json", optional: true, reloadOnChange: true);
             }
             else
             {
-                return builder
-                    .AddJsonFile(_configFile)
-                    .AddEnvironmentVariables()
-                    .AddUserSecrets<T>(true);
+                builder
+                    .AddJsonFile(_configFile);
             }
+            return  builder
+                        .AddEnvironmentVariables()
+                        .AddUserSecrets<T>(true);
         }
 
         public IHostBuilder BuildBaslineHost(string[] args)
@@ -151,8 +150,7 @@ namespace Toolsfactory.Home.Adapters.Common
             builder.ConfigureAppConfiguration((hostingContext, config) =>
             {
                 CreateBaselineConfig(config)
-                    .AddCommandLine(args)
-                    .AddUserSecrets(Assembly.GetEntryAssembly(), true);
+                    .AddCommandLine(args);
             });
             _Logger.Debug("AppConfiguration configured");
         }
@@ -164,6 +162,7 @@ namespace Toolsfactory.Home.Adapters.Common
                 config.SetBasePath(_configDir)
                     .AddJsonFile("hostsettings.json", true)
                     .AddEnvironmentVariables()
+                    .AddUserSecrets<T>(true)
                     .AddCommandLine(args);
             });
             _Logger.Debug("HostConfiguration configured");
@@ -175,7 +174,7 @@ namespace Toolsfactory.Home.Adapters.Common
                 return configDirArg;
             else
             {
-                var confEnv = Environment.GetEnvironmentVariable(ServiceName.ToUpperInvariant() + "_CONF");
+                var confEnv = Environment.GetEnvironmentVariable(ServiceName.ToUpperInvariant() + "_CONFIGDIR");
                 if (confEnv == null || !Directory.Exists(confEnv))
                     return Directory.GetCurrentDirectory();
 

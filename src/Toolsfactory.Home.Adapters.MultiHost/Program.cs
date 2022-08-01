@@ -34,22 +34,17 @@ namespace Toolsfactory.Home.Adapters.MultiHost
 
             var configDirOption = new Option<string>
             (new[] { "--configdir", "-c" },
-             description: "Directory with the config files. In case it is not with the executeable");
-
-            var servicesOption = new Option<string>(new[] { "--services", "-s" })
-            {
-                AllowMultipleArgumentsPerToken = true
-            };
+             description: "Directory with the config files. In case it is not with the executable");
 
             var rootCmd = new RootCommand();
+            rootCmd.AddGlobalOption(debugOption);
+            rootCmd.AddGlobalOption(configDirOption);
             AddSubCommand(rootCmd, "weather", debugOption, configDirOption);
             AddSubCommand(rootCmd, "garbage", debugOption, configDirOption);
             AddSubCommand(rootCmd, "powermeter", debugOption, configDirOption);
             AddSubCommand(rootCmd, "gasprices", debugOption, configDirOption);
             AddSubCommand(rootCmd, "heating", debugOption, configDirOption);
             AddSubCommand(rootCmd, "all", debugOption, configDirOption);
-            rootCmd.Add(debugOption);
-            rootCmd.Add(configDirOption);
 
             rootCmd.SetHandler(async (debugOptionValue, configDirOptionValue) =>
             {
@@ -84,6 +79,9 @@ namespace Toolsfactory.Home.Adapters.MultiHost
         static async Task InitializeAllAsync(bool debug, string configDir, string command)
         {
             Console.WriteLine("MultiHost started for " +  command);
+            if(!string.IsNullOrEmpty(configDir))
+                Console.WriteLine("ConfigDir set via option: " + configDir);
+
             var host = new ServiceHost<Program>("multihost", debug, configDir, "");
             await host.BuildBaslineHost(Array.Empty<string>())
                 .ConfigureServices((hostContext, services) =>

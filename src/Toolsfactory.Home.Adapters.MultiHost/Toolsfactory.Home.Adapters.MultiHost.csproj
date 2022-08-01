@@ -9,7 +9,7 @@
 	  <Nullable>enable</Nullable>
 	  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	  <DockerfileContext>..\..</DockerfileContext>
-	  <DockerfileRunArguments>-v "$(AppData)/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"</DockerfileRunArguments>
+<!--	  <DockerfileRunArguments>-v "$(AppData)/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"</DockerfileRunArguments> -->
   </PropertyGroup>
 
 
@@ -52,6 +52,9 @@
 	<None Update="multihost.service">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	</None>
+	<None Update="start.sh">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</None>
   </ItemGroup>
 </Project>

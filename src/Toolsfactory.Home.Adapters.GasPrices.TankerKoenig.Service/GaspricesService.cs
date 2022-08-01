@@ -105,17 +105,17 @@ namespace Toolsfactory.Home.Adapters.Gasprices.Tankerkoenig
                     if (gsSettings != null)
                     {
                         var id = gsSettings.StationId.ToLowerInvariant();
-                        if (_homieEnv.MappedProperties.TryGetValue(id + "-diesel", out var propD))
+                        if (gasprices.Value.Diesel.HasValue && _homieEnv.MappedProperties.TryGetValue(id + "-diesel", out var propD))
                         {
                             propD.Value = (double) gasprices.Value.Diesel.Value;
                             _logger.DebugGasPriceChange(gasprices.Value.Diesel.Value, "Diesel", id);
                         }
-                        if (_homieEnv.MappedProperties.TryGetValue(id + "-supere5", out var propE5))
+                        if (gasprices.Value.E5.HasValue && _homieEnv.MappedProperties.TryGetValue(id + "-supere5", out var propE5))
                         {
                             propE5.Value = (double) gasprices.Value.E5;
                             _logger.DebugGasPriceChange(gasprices.Value.E5.Value, "Super E5", id);
                         }
-                        if (_homieEnv.MappedProperties.TryGetValue(id + "-supere10", out var propE10))
+                        if (gasprices.Value.E10.HasValue && _homieEnv.MappedProperties.TryGetValue(id + "-supere10", out var propE10))
                         {
                             propE10.Value = (double) gasprices.Value.E10;
                             _logger.DebugGasPriceChange(gasprices.Value.E10.Value, "Super E10", id);
