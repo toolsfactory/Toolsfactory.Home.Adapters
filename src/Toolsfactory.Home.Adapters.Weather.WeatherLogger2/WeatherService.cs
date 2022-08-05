@@ -109,7 +109,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
             if (!parsed)
                 return data;
 
-            double value = 0;
+            double value = pdata;
             if (item == "windchillf" || item == "dewptf" || item == "tempf" || item == "indoortempf")
             {
                 value = pdata.Fahrenheit2Celsius();
