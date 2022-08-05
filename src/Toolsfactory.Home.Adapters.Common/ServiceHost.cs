@@ -58,8 +58,6 @@ namespace Toolsfactory.Home.Adapters.Common
                 Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 
             var config = CreateBaselineConfig(new ConfigurationBuilder()).Build();
-            WriteDebug("Baseline Configuration:");
-            WriteDebug(config.GetDebugView());
 
             var loggerconfig = new LoggerConfiguration()
                 .WriteTo.Console();

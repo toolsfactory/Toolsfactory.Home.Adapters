@@ -32,5 +32,5 @@ VOLUME ["/etc/homie-multihost"]
 EXPOSE 12004/tcp
 EXPOSE 8081/tcp
 RUN /bin/bash -c "rm appsettings.*; rm *.pdb"
-ENTRYPOINT ["dotnet", "multihost.host.dll", "all", "-c","/etc/homie-multihost"]
-#ENTRYPOINT ["start.sh"]
+ENTRYPOINT ["dotnet", "multihost.host.dll", "all"]
+CMD ["-c", "/etc/homie-multihost"]

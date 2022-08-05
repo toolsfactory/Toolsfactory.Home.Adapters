@@ -4,10 +4,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
 using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Tiveria.Common;
 using Tiveria.Common.BasicHttpServer;
 using Tiveria.Common.Extensions;
@@ -35,7 +31,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
 
             _options = options;
             _logger = loggerfactory.CreateLogger<WeatherService>();
-            _httpClient = httpClientFactory.CreateClient("Wheatherserviceproxy");
+            _httpClient = httpClientFactory.CreateClient("Weatherserviceproxy");
             _server = new HttpServer(loggerfactory.CreateLogger<HttpServer>(), _options.Value.LocalServer.Port);
             _homieEnv = new HomieEnvironmentBuilder(_options.Value.HomieDeviceIdentifier, _options.Value.HomieDeviceName, _options.Value.HomieDeviceNodes, mqttConfig.Value, loggerfactory);
         }
@@ -71,7 +67,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
             return Task.Run(() =>
             {
                 _logger.LogInformation("New request: {request}", request.Url);
-                response.StatusCode = (int)HttpStatusCode.OK;
+                response.StatusCode = (int) HttpStatusCode.OK;
                 response.AsText("Success");
                 response.Close();
                 _logger.LogDebug("Request handled");
@@ -95,7 +91,7 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
 
         async Task PutUpdateAsync(string key, string value)
         {
-            if(_homieEnv.MappedProperties.TryGetValue(key, out var properties))
+            if (_homieEnv.MappedProperties.TryGetValue(key, out var properties))
             {
                 properties.RawValue = value;
                 _logger.DebugParameterSent(key, value);
@@ -113,7 +109,8 @@ namespace Toolsfactory.Home.Adapters.Weather.WeatherLogger2
             if (item == "windchillf" || item == "dewptf" || item == "tempf" || item == "indoortempf")
             {
                 value = pdata.Fahrenheit2Celsius();
-            } else if (item == "baromin")
+            }
+            else if (item == "baromin")
             {
                 value = pdata.InHg2mBar();
             }
