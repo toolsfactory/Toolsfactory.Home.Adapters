@@ -170,21 +170,27 @@ namespace Toolsfactory.Home.Adapters.Common
 
         private string GetConfigurationDirectory(string? configDirArg)
         {
+            var confEnv = Environment.GetEnvironmentVariable(ServiceName.ToUpperInvariant() + "_CONFIGDIR");
+            var fallback = Directory.GetCurrentDirectory();
+
+            WriteDebug($"ConfigDir Parameter: {configDirArg}, Exists: {Directory.Exists(configDirArg)}");
+            WriteDebug($"ConfigDir environment variable: {confEnv}, Exists: {Directory.Exists(confEnv)}");
+            WriteDebug($"ConfigDir fallback: {fallback}, Exists: {Directory.Exists(fallback)}");
+
             if (!configDirArg.IsNullOrWhiteSpace() && Directory.Exists(configDirArg))
                 return configDirArg;
             else
             {
-                var confEnv = Environment.GetEnvironmentVariable(ServiceName.ToUpperInvariant() + "_CONFIGDIR");
                 if (confEnv == null || !Directory.Exists(confEnv))
                     return Directory.GetCurrentDirectory();
-
                 return confEnv;
             }
         }
 
         private void WriteDebug(string text)
         {
-            Debug.WriteLineIf(_debug, text);
+            /*if (_debug) */ Console.WriteLine("DBG: " + text);
+            //Debug.WriteLineIf(_debug, text);
         }
     }
 }

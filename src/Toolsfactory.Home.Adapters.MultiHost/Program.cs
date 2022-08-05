@@ -79,8 +79,6 @@ namespace Toolsfactory.Home.Adapters.MultiHost
         static async Task InitializeAllAsync(bool debug, string configDir, string command)
         {
             Console.WriteLine("MultiHost started for " +  command);
-            if(!string.IsNullOrEmpty(configDir))
-                Console.WriteLine("ConfigDir set via option: " + configDir);
 
             var host = new ServiceHost<Program>("multihost", debug, configDir, "");
             await host.BuildBaslineHost(Array.Empty<string>())

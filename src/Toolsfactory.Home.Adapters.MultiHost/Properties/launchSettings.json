@@ -40,7 +40,7 @@
       "commandName": "Docker",
       "commandLineArgs": "-c /etc/multihost",
       "environmentVariables": {
-        "_MULTIHOST_CONFIGDIR": "/etc/multihost"
+        "MULTIHOST_CONFIGDIR": "/etc/multihost"
       },
       "DockerfileRunArguments": "-v  \"d:\\temp\\:/etc/multihost/:ro\""
     },
