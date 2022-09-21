@@ -5,7 +5,7 @@ using Toolsfactory.Home.Adapters.Common;
 using Toolsfactory.Protocols.Homie.Devices;
 using Toolsfactory.Home.Adapters.Powermeter.D0;
 
-namespace Tiveria.Home.D0.SampleApp
+namespace Toolsfactory.Home.Adapters.Powermeter.Host
 {
     class Program
     {

@@ -29,7 +29,7 @@ namespace Toolsfactory.Home.Adapters.Common
             _configFile = configFile ?? String.Empty;
             _envName = Environment.GetEnvironmentVariable("environment")?.ToLowerInvariant() ?? "production";
             ServiceName = servicename;
-
+            WriteDebug($"Starting Service '{ServiceName}'");
             SetupConfiguration(configDirectory);
             _Logger = SetupLogging();
             LogBasics();

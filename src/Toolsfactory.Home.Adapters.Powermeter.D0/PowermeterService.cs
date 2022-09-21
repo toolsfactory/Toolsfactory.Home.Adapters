@@ -20,7 +20,6 @@ namespace Toolsfactory.Home.Adapters.Powermeter.D0
 
         private D0SerialTransport? _transport;
         private double _lastValue = -1;
-        private bool _started = false;
 
         public PowermeterService(ILoggerFactory loggerFactory, IOptions<PowermeterConfig> options, IOptions<HomieMqttServerConfiguration> mqttConfig, IHostApplicationLifetime hostApplicationLifetime)
         {
@@ -53,18 +52,18 @@ namespace Toolsfactory.Home.Adapters.Powermeter.D0
             }
             await _homieEnv.StartAsync();
             await base.StartAsync(cancellationToken);
-            _started = true;
+            _logger.LogInformation("PowermeterService is started.");
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (!_started)
-                return;
+            _logger.LogDebug("Entering execution.");
 
             stoppingToken.Register(() =>
                 _logger.LogDebug("DeamonService stop request received."));
     
             await RunLoopAsync(stoppingToken).ConfigureAwait(false);
+            _logger.LogDebug("Leaving execution.");
         }
 
         public override async Task StopAsync(CancellationToken cancellationToken)
@@ -78,6 +77,7 @@ namespace Toolsfactory.Home.Adapters.Powermeter.D0
 
         private async Task RunLoopAsync(CancellationToken stoppingToken)
         {
+            _logger.LogDebug("Entering run loop.");
             Int64 counter = 0;
 
             Ensure.That(_transport).IsNotNull();
@@ -104,6 +104,7 @@ namespace Toolsfactory.Home.Adapters.Powermeter.D0
                         _transport!.Close();
                 }
             }
+            _logger.LogDebug("Leaving run loop.");
         }
 
         private D0SimpleStreamParser CreateParser(CancellationToken stoppingToken)
@@ -133,30 +134,32 @@ namespace Toolsfactory.Home.Adapters.Powermeter.D0
 
         private void Parser_ObisDataEvent(object sender, ObisDataEventArgs e)
         {
-            _logger.LogInformation($"Obis Data - Code: {e.Code} - Value: {e.Value} - Unit: {e.Unit}");
+            _logger.LogInformation("Obis Data - Code: {Code} - Value: {Value} - Unit: {Unit}", e.Code, e.Value, e.Unit);
             if (e.Code == "1.8.0")
                 _ = ReactOn180ObisDataAsync(e.Value);
         }
 
         private void Parser_VendorMessageEvent(object sender, VendorMessageEventArgs e)
         {
-            _logger.LogInformation($"Vendor Info - Name: {e.Vendor} - Indentification: {e.Identification} - BaudChar: {e.BaudrateCharacter} ({e.Baudrate})");
+            _logger.LogInformation("Vendor Info - Name: {Vendor} - Indentification: {Identification} - BaudChar: {BaudrateCharacter} ({Baudrate})", e.Vendor, e.Identification, e.BaudrateCharacter, e.Baudrate);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2234:System-URI-Objekte anstelle von Zeichenfolgen übergeben", Justification = "<Ausstehend>")]
         private async Task ReactOn180ObisDataAsync(string value)
         {
-            if (double.TryParse(value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out var val))
-            {
-                _homieEnv.TotalConsumptionProperty.Value = val;
-                if (_lastValue > -1 && _lastValue <= val)
+            await Task.Run(() => { 
+                if (double.TryParse(value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out var val))
                 {
-                    var period = (val - _lastValue) * 1000;
-                    _logger.LogInformation($"Calculating Period: ({val} - {_lastValue}) * 1000 = {period}");
-                    _homieEnv.PeriodConsumptionProperty.Value = period;
+                    _homieEnv.TotalConsumptionProperty.Value = val;
+                    if (_lastValue > -1 && _lastValue <= val)
+                    {
+                        var period = (val - _lastValue) * 1000;
+                        _logger.LogInformation($"Calculating Period: ({val} - {_lastValue}) * 1000 = {period}");
+                        _homieEnv.PeriodConsumptionProperty.Value = period;
+                    }
+                    _lastValue = val;
                 }
-                _lastValue = val;
-            }
+            });
         }
     }
 }

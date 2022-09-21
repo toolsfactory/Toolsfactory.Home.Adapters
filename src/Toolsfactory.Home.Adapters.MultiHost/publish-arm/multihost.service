@@ -1,16 +1,16 @@
-[Unit]
-Description=Weatherstation proxy for OpenHab
+﻿[Unit]
+Description=Multihost - Gasprices, Abfall and Weather for OpenHab
 After=network.target
 
 [Service]
-ExecStart=/usr/share/ohd0powermeter/d0powermeter.host
+ExecStart=/usr/share/homie-multihost/multihost.host
 Restart=always
-User=openhabian
+User=pi
 # Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
 Group=nogroup
-WorkingDirectory=/usr/share/ohd0powermeter
+WorkingDirectory=/usr/share/homie-multihost
 Environment=PATH=/usr/bin:/usr/local/bin:/usr/share/dotnet:/opt/dotnet/shared:/opt/dotnet
-Environment=D0POWERMETER_CONFIGDIR=/etc/ohadapters/d0powermeter
+Environment=MULTIHOST_CONF=/etc/homie-multihost
 Environment=DOTNET_ROOT=/opt/dotnet
 
 [Install]

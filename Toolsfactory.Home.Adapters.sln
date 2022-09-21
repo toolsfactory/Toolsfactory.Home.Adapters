@@ -55,7 +55,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tiveria.Common.BasicHttpSer
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C160AB3C-D1F1-4A2B-B6B7-89BC5F0E1E51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolsfactory.Home.Adapters.UnitTests", "src\Toolsfactory.Home.Adapters.UnitTests\Toolsfactory.Home.Adapters.UnitTests.csproj", "{8872AD6A-DCC4-4519-B100-13F27257EC76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.UnitTests", "src\Toolsfactory.Home.Adapters.UnitTests\Toolsfactory.Home.Adapters.UnitTests.csproj", "{8872AD6A-DCC4-4519-B100-13F27257EC76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolsfactory.Home.Adapters.Powermeter.D0.Host", "src\Toolsfactory.Home.Adapters.Powermeter.D0.Host\Toolsfactory.Home.Adapters.Powermeter.D0.Host.csproj", "{AA760A99-14A6-49D3-8306-F3F76D986570}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -154,6 +156,12 @@ Global
 		{8872AD6A-DCC4-4519-B100-13F27257EC76}.Release Linux|Any CPU.Build.0 = Release|Any CPU
 		{8872AD6A-DCC4-4519-B100-13F27257EC76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8872AD6A-DCC4-4519-B100-13F27257EC76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA760A99-14A6-49D3-8306-F3F76D986570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA760A99-14A6-49D3-8306-F3F76D986570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA760A99-14A6-49D3-8306-F3F76D986570}.Release Linux|Any CPU.ActiveCfg = Release|Any CPU
+		{AA760A99-14A6-49D3-8306-F3F76D986570}.Release Linux|Any CPU.Build.0 = Release|Any CPU
+		{AA760A99-14A6-49D3-8306-F3F76D986570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA760A99-14A6-49D3-8306-F3F76D986570}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,6 +186,7 @@ Global
 		{824195F4-1E5F-46F8-B3F1-E748094BB58E} = {D653AD96-6B47-4FED-B4E1-4449EE4A9517}
 		{ADB17DFA-2576-4CFC-95D4-BBF1EE7C9C55} = {D5054E01-00B5-4A27-B43F-FFE062E1D49A}
 		{8872AD6A-DCC4-4519-B100-13F27257EC76} = {F2EDD50C-CD3C-4623-813D-D4D23F1C7A9C}
+		{AA760A99-14A6-49D3-8306-F3F76D986570} = {E80298A4-D78B-48FC-AD6D-ABCA8452C5CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {691045E6-FC7A-4DB6-A2DE-2F28517D4C8C}
